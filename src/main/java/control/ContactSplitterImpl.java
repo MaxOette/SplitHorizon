@@ -49,10 +49,12 @@ public class ContactSplitterImpl implements ContactSplitter {
 
         nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
         matcher = nobiliaryPattern.matcher(input);
+        int nobilityIdx = 0;
         if (matcher.find()) {
             contact.setNobleTitle(matcher.group());
             String subString = input.substring(matcher.start(), matcher.end()).trim();
             input = input.replace(subString, "");
+            nobilityIdx = matcher.start();
         }
 
         input = input.trim();
@@ -83,8 +85,12 @@ public class ContactSplitterImpl implements ContactSplitter {
             }
             if (nameParts.length == 3) {
                 contact.setFirstName(nameParts[0]);
-                contact.setSecondName(nameParts[1]);
-                contact.setLastName(nameParts[2]);
+               // if (nobilityIdx == nameParts[0].trim().length() + 2) {
+               //     contact.setLastName(nameParts[1] + "-" + nameParts[2]);
+               // } else {
+                    contact.setSecondName(nameParts[1]);
+                    contact.setLastName(nameParts[2]);
+               // }
 
             }
             if (nameParts.length > 3) {

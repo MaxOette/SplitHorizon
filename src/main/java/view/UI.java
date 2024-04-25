@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Contact;
 import model.Gender;
@@ -31,22 +32,34 @@ public class UI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_LEFT);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        GridPane outerGrid = new GridPane();
+        outerGrid.setAlignment(Pos.CENTER_LEFT);
+        outerGrid.setHgap(50);
+        outerGrid.setVgap(10);
+
+        GridPane leftInnerGrid = new GridPane();
+        leftInnerGrid.setHgap(20);
+        leftInnerGrid.setVgap(10);
+
+        GridPane rightInnerGrid = new GridPane();
+        rightInnerGrid.setHgap(20);
+        rightInnerGrid.setVgap(10);
 
         Label inputLabel = new Label("Vollständigen Namen eingeben:");
+        Label editLabel = new Label("Namensbestandteile manuell eingeben oder bearbeiten:");
+        outerGrid.add(inputLabel, 0, 0);
+        outerGrid.add(editLabel, 1, 0);
+
         TextField inputField = new TextField();
         Button parseButton = new Button("Parsen");
         Button generateButton = new Button("Anrede generieren");
         Button doneButton = new Button("Fertig");
-        Label resultLabel = new Label("Ergebnis-Anrede");
-        Label resultText = new Label("");
-        ComboBox<Gender> genderComboBox = new ComboBox<>();
+        HBox buttonsBox = new HBox(10, parseButton, generateButton, doneButton);
+        leftInnerGrid.add(buttonsBox, 0, 1);
+        leftInnerGrid.add(inputField, 0, 0);
 
         TextField salutationField = new TextField();
+        ComboBox<Gender> genderComboBox = new ComboBox<>();
         genderComboBox.getItems().setAll(Gender.values());
         genderComboBox.setValue(Gender.X);
         TextField title1Field = new TextField();
@@ -56,37 +69,37 @@ public class UI extends Application {
         TextField nobleTitleField = new TextField();
         TextField lastNameField = new TextField();
 
-        grid.add(inputLabel, 0, 0);
-        grid.add(inputField, 0, 1);
+        rightInnerGrid.add(new Label("Anrede:"), 0, 0);
+        rightInnerGrid.add(salutationField, 1, 0);
 
-        HBox buttonsBox = new HBox(10, parseButton, generateButton, doneButton);
-        grid.add(buttonsBox, 0, 2);
+        rightInnerGrid.add(new Label("Geschlecht:"), 2, 0);
+        rightInnerGrid.add(genderComboBox, 3, 0);
 
-        grid.add(new Label("Anrede:"), 1, 1);
-        grid.add(salutationField, 2, 1);
+        rightInnerGrid.add(new Label("Titel 1:"), 0, 1);
+        rightInnerGrid.add(title1Field, 1, 1);
+        rightInnerGrid.add(new Label("Titel 2:"), 2, 1);
+        rightInnerGrid.add(title2Field, 3, 1);
 
-        grid.add(new Label("Geschlecht:"), 1, 2);
-        grid.add(genderComboBox, 2, 2);
+        rightInnerGrid.add(new Label("1. Vorname:"), 0, 2);
+        rightInnerGrid.add(firstNameField, 1, 2);
+        rightInnerGrid.add(new Label("2. Vorname:"), 2, 2);
+        rightInnerGrid.add(secondNameField, 3, 2);
 
-        grid.add(new Label("Titel 1"), 1, 3);
-        grid.add(title1Field, 2, 3);
-        grid.add(new Label("Titel 2"), 3, 3);
-        grid.add(title2Field, 4, 3);
+        rightInnerGrid.add(new Label("Adelstitel:"), 0, 3);
+        rightInnerGrid.add(nobleTitleField, 1, 3);
+        rightInnerGrid.add(new Label("Nachname:"), 2, 3);
+        rightInnerGrid.add(lastNameField, 3, 3);
 
-        grid.add(new Label("Vorname"), 1, 4);
-        grid.add(firstNameField, 2, 4);
-        grid.add(new Label("2. Vorname"), 3, 4);
-        grid.add(secondNameField, 4, 4);
 
-        grid.add(new Label("Adelstitel"), 1, 5);
-        grid.add(nobleTitleField, 2, 5);
-        grid.add(new Label("Nachname"), 3, 5);
-        grid.add(lastNameField, 4, 5);
+        outerGrid.add(leftInnerGrid, 0, 1);
+        outerGrid.add(rightInnerGrid, 1, 1);
 
-        grid.add(resultLabel, 0, 6);
-        grid.add(resultText, 0, 7);
+        Label resultLabel = new Label("Ergebnis-Anrede:");
+        Label resultText = new Label("");
 
-        Scene scene = new Scene(grid, 900, 600);
+        VBox vbox = new VBox(outerGrid, resultLabel, resultText);
+        vbox.setPadding(new Insets(25, 25, 25, 25));
+        Scene scene = new Scene(vbox, 900, 250);
         primaryStage.setTitle("SplitHorizon");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -106,6 +119,15 @@ public class UI extends Application {
         });
 
         generateButton.setOnAction(event -> {
+            contact.setSalutation(salutationField.getText());
+            contact.setGender(genderComboBox.getValue());
+            contact.setTitle1(title1Field.getText());
+            contact.setTitle2(title2Field.getText());
+            contact.setFirstName(firstNameField.getText());
+            contact.setSecondName(secondNameField.getText());
+            contact.setNobleTitle(nobleTitleField.getText());
+            contact.setLastName(lastNameField.getText());
+
             resultText.setText(messageGenerator.generateMessage(contact));
         });
 
@@ -118,6 +140,7 @@ public class UI extends Application {
             }
             if (!NobleTitles.titlesList.contains(nobleTitleField.getText())) {
                 NobleTitles.titlesList.add(nobleTitleField.getText());
+                System.out.println("Added the following to noble Titles: " + nobleTitleField.getText());
             }
 
             contact = new Contact();

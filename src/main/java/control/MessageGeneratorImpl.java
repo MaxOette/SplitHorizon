@@ -7,8 +7,9 @@ public class MessageGeneratorImpl implements MessageGenerator {
 
     @Override
     public String generateMessage(Contact contact) {
+        String message = "";
         if(contact.getGender() == Gender.M) {
-            return "Sehr geehrter Herr " +
+            message = "Sehr geehrter Herr " +
                     contact.getTitle1() + " " +
                     contact.getTitle2() + " " +
                     contact.getFirstName() +  " " +
@@ -16,7 +17,7 @@ public class MessageGeneratorImpl implements MessageGenerator {
                     contact.getNobleTitle() + " " +
                     contact.getLastName();
         } else if (contact.getGender() == Gender.F) {
-            return "Sehr geehrte Frau " +
+            message = "Sehr geehrte Frau " +
                     contact.getTitle1() + " " +
                     contact.getTitle2() + " " +
                     contact.getFirstName() +  " " +
@@ -24,7 +25,7 @@ public class MessageGeneratorImpl implements MessageGenerator {
                     contact.getNobleTitle() + " " +
                     contact.getLastName();
         } else {
-            return "Hallo " +
+            message = "Hallo " +
                     contact.getTitle1() + " " +
                     contact.getTitle2() + " " +
                     contact.getFirstName() +  " " +
@@ -32,6 +33,7 @@ public class MessageGeneratorImpl implements MessageGenerator {
                     contact.getNobleTitle() + " " +
                     contact.getLastName();
         }
+        return message.trim().replaceAll("\\s+", " ");
     }
 
 

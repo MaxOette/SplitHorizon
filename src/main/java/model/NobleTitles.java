@@ -7,7 +7,8 @@ public class NobleTitles {
 
     public static List<String> titlesList = new ArrayList<String>() {{
         add("Baron von");
-        add("Freiherr (von|vom)");
+        add("Freiherr von");
+        add("Freiherr vom");
         add("von");
         add("zu");
     }};
