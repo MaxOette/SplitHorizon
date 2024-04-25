@@ -31,14 +31,12 @@ public class UI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Erstellen des Layouts
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.TOP_LEFT);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        // UI-Komponenten
         Label inputLabel = new Label("Vollständigen Namen eingeben:");
         TextField inputField = new TextField();
         Button parseButton = new Button("Parsen");
@@ -58,7 +56,6 @@ public class UI extends Application {
         TextField nobleTitleField = new TextField();
         TextField lastNameField = new TextField();
 
-        // Platzierung der UI-Komponenten
         grid.add(inputLabel, 0, 0);
         grid.add(inputField, 0, 1);
 
@@ -89,7 +86,6 @@ public class UI extends Application {
         grid.add(resultLabel, 0, 6);
         grid.add(resultText, 0, 7);
 
-        // Szene und Bühne
         Scene scene = new Scene(grid, 900, 600);
         primaryStage.setTitle("SplitHorizon");
         primaryStage.setScene(scene);
