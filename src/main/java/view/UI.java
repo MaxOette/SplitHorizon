@@ -15,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.Contact;
 import model.Gender;
@@ -50,14 +52,16 @@ public class UI extends Application {
         rightInnerGrid.setVgap(10);
 
         Label inputLabel = new Label("Vollständigen Namen eingeben:");
+        inputLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
         Label editLabel = new Label("Namensbestandteile manuell eingeben oder bearbeiten:");
+        editLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
         outerGrid.add(inputLabel, 0, 0);
         outerGrid.add(editLabel, 1, 0);
 
         TextField inputField = new TextField();
         Button parseButton = new Button("Parsen");
         Button generateButton = new Button("Anrede generieren");
-        Button doneButton = new Button("Fertig");
+        Button doneButton = new Button("Speichern");
         HBox buttonsBox = new HBox(10, parseButton, generateButton, doneButton);
         leftInnerGrid.add(buttonsBox, 0, 1);
         leftInnerGrid.add(inputField, 0, 0);
@@ -99,6 +103,7 @@ public class UI extends Application {
         outerGrid.add(rightInnerGrid, 1, 1);
 
         Label resultLabel = new Label("Ergebnis-Anrede:");
+        resultLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
         Label resultText = new Label("");
 
         VBox vbox = new VBox(outerGrid, resultLabel, resultText);

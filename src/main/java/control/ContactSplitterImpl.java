@@ -18,7 +18,7 @@ public class ContactSplitterImpl implements ContactSplitter {
     private Pattern salutationPattern;
 
     public ContactSplitterImpl() {
-        salutationPattern = Pattern.compile("Herr|Frau");
+        salutationPattern = Pattern.compile("Herr|Frau|Hr\\.|Fr\\.");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ContactSplitterImpl implements ContactSplitter {
         matcher = salutationPattern.matcher(input);
         if (matcher.find()) {
             contact.setSalutation(matcher.group());
-            contact.setGender("Herr".equals(matcher.group()) ? Gender.M : Gender.F);
+            contact.setGender(("Herr".equals(matcher.group()) || "Hr.".equals(matcher.group())) ? Gender.M : Gender.F);
             input = input.substring(matcher.end()).trim();
         }
 
