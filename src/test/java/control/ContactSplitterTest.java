@@ -38,8 +38,10 @@ class ContactSplitterTest {
                 Arguments.of("Mustermann, Max", "", Gender.X, "", "", "Max", "", "", "Mustermann"),
                 Arguments.of("Mustermann, Max Erika", "", Gender.X, "", "", "Max", "Erika", "", "Mustermann"),
                 Arguments.of("Mustermann, Prof. Dr. rer. nat. Max", "", Gender.X, "Prof.", "Dr. rer. nat.", "Max", "", "", "Mustermann"),
-                Arguments.of("Freiherr von Mustermann, Prof. Dr. rer. nat. Max", "", Gender.X, "Prof.", "Dr. rer. nat.", "Max", "", "Freiherr von", "Mustermann")
-        );
+                Arguments.of("Freiherr von Mustermann, Prof. Dr. rer. nat. Max", "", Gender.X, "Prof.", "Dr. rer. nat.", "Max", "", "Freiherr von", "Mustermann"),
+                Arguments.of(" Freiherr  von   Mustermann    Musterfrau    ,    Prof.     Max    ", "", Gender.X, "Prof.", "", "Max", "", "Freiherr von", "Mustermann-Musterfrau"),
+                Arguments.of("      Herr     Prof.       Dr.     rer.      nat.       Max       Erika      Freiherr      von      Mustermann       Musterfrau      ", "Herr", Gender.M, "Prof.", "Dr. rer. nat.", "Max", "Erika", "Freiherr von", "Mustermann-Musterfrau")
+                );
     }
 
     @ParameterizedTest

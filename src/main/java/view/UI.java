@@ -21,6 +21,10 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class UI extends Application {
 
     private Contact contact = new Contact();
@@ -132,14 +136,23 @@ public class UI extends Application {
         });
 
         doneButton.setOnAction(event -> {
-            if (!Titles.titlesList.contains(title1Field.getText())) {
-                Titles.titlesList.add(title1Field.getText());
+
+            Pattern titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
+            Pattern nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
+
+            Matcher matcher = titlePattern.matcher(title1Field.getText());
+            if (!matcher.matches() && !title1Field.getText().trim().isEmpty()) {
+                Titles.titlesList.add(title1Field.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
+                System.out.println("Added the following to Titles: " + title1Field.getText());
             }
-            if (!Titles.titlesList.contains(title2Field.getText())) {
-                Titles.titlesList.add(title2Field.getText());
+            matcher = titlePattern.matcher(title2Field.getText());
+            if (!matcher.matches() && !title2Field.getText().trim().isEmpty()) {
+                Titles.titlesList.add(title2Field.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
+                System.out.println("Added the following to Titles: " + title2Field.getText());
             }
-            if (!NobleTitles.titlesList.contains(nobleTitleField.getText())) {
-                NobleTitles.titlesList.add(nobleTitleField.getText());
+            matcher = nobiliaryPattern.matcher(nobleTitleField.getText());
+            if (!matcher.matches() && !nobleTitleField.getText().trim().isEmpty()) {
+                NobleTitles.titlesList.add(nobleTitleField.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
                 System.out.println("Added the following to noble Titles: " + nobleTitleField.getText());
             }
 

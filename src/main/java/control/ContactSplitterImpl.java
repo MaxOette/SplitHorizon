@@ -6,8 +6,10 @@ import model.NobleTitles;
 import model.Titles;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class ContactSplitterImpl implements ContactSplitter {
@@ -31,23 +33,29 @@ public class ContactSplitterImpl implements ContactSplitter {
             input = input.substring(matcher.end()).trim();
         }
 
+        Titles.titlesList.sort(Collections.reverseOrder());
         titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
         for (int i = 0; i < 2; i++) {
             matcher = titlePattern.matcher(input);
 
             if (matcher.find()) {
-                if (i == 0) contact.setTitle1(matcher.group());
-                if (i == 1) contact.setTitle2(matcher.group());
+                String[] titleParts = matcher.group().split(" ");
+                String title = Arrays.stream(titleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
+
+                if (i == 0) contact.setTitle1(title);
+                if (i == 1) contact.setTitle2(title);
                 String subString = input.substring(matcher.start(), matcher.end()).trim();
                 input = input.replace(subString, "");
             }
-
         }
 
+        NobleTitles.titlesList.sort(Collections.reverseOrder());
         nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
         matcher = nobiliaryPattern.matcher(input);
         if (matcher.find()) {
-            contact.setNobleTitle(matcher.group());
+            String[] nobleTitleParts = matcher.group().split(" ");
+            String nobleTitle = Arrays.stream(nobleTitleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
+            contact.setNobleTitle(nobleTitle);
             String subString = input.substring(matcher.start(), matcher.end()).trim();
 
             if (input.contains(",")) {

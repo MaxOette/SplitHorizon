@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Titles {
     public static List<String> titlesList = new ArrayList<String>() {{
-        add("Dr\\. rer\\. nat\\.");
-        add("Dr\\. h.c\\. mult\\.");
-        add("Dr\\. habil\\.");
-        add("Dr\\. med\\.");
-        add("Dr\\. phil\\.");
+        add("Dr\\.\\s*rer\\.\\s*nat\\.");
+        add("Dr\\.\\s*h\\.\\s*c\\.\\s*mult\\.");
+        add("Dr\\.\\s*habil\\.");
+        add("Dr\\.\\s*med\\.");
+        add("Dr\\.\\s*phil\\.");
         add("Dr\\.");
         add("Professor");
         add("Prof\\.");
-        add("Dr\\.\\-Ing\\.");
-        add("Dipl\\. Ing\\.");
+        add("Dr\\.\\s*-\\s*Ing\\.");
+        add("Dipl\\.\\s*Ing\\.");
     }};
 }
