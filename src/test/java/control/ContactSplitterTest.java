@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Class for testing functionality of ContactSplitter.
+ */
 class ContactSplitterTest {
 
     private static Stream<Arguments> provideTestCases() {
@@ -48,6 +51,18 @@ class ContactSplitterTest {
                 );
     }
 
+    /**
+     * Tests if the ContactSplitter is separating the input into the expected parts.
+     * @param input - a string representing the full name.
+     * @param expectedSalutation - expected part of the string representing the salutation.
+     * @param expectedGender - expected gender to be extracted from the input.
+     * @param expectedTitle1 - expected part of the string representing the first scientific title.
+     * @param expectedTitle2 - expected part of the string representing the second scientific title.
+     * @param expectedFirstName - expected part of the string representing the first name.
+     * @param expectedSecondName - expected part of the string representing the second name.
+     * @param expectedNobleTitle - expected part of the string representing the title of nobility.
+     * @param expectedLastName - expected part of the string representing the last name.
+     */
     @ParameterizedTest
     @MethodSource("provideTestCases")
     void testParseContactString(

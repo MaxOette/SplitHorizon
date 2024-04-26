@@ -11,16 +11,41 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
+/**
+ * The class ContactSplitterImpl implements the ContactSplitter interface. Its provides functionality for splitting a
+ * name into its individual parts.
+ */
 public class ContactSplitterImpl implements ContactSplitter {
+
+    /**
+     * Regex-pattern containing common scientific titles.
+     */
     private Pattern titlePattern;
+
+    /**
+     * Regex-pattern containing common titles of nobility.
+     */
     private Pattern nobiliaryPattern;
+
+    /**
+     * Regex-pattern containing the usual german salutation strings.
+     */
     private Pattern salutationPattern;
 
+    /**
+     * Constructor - called by initialization of the class.
+     * Sets default values to class variables.
+     */
     public ContactSplitterImpl() {
         salutationPattern = Pattern.compile("Herr|Frau|Hr\\.|Fr\\.");
     }
 
+    /**
+     * Splits the input into the individual parts of a name and saves them into a Contact object.
+     *
+     * @param input - string containing the full name input.
+     * @return Contact - object for storing information about the individual parts of a name.
+     */
     @Override
     public Contact parseContactString(String input) {
         Contact contact = new Contact();
@@ -97,12 +122,8 @@ public class ContactSplitterImpl implements ContactSplitter {
             }
             if (nameParts.length == 3) {
                 contact.setFirstName(nameParts[0]);
-                // if (nobilityIdx == nameParts[0].trim().length() + 2) {
-                //     contact.setLastName(nameParts[1] + "-" + nameParts[2]);
-                // } else {
                 contact.setSecondName(nameParts[1]);
                 contact.setLastName(nameParts[2]);
-                // }
 
             }
             if (nameParts.length > 3) {

@@ -3,8 +3,15 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class Titles defines a mutable list of common scientific titles.
+ */
 public class Titles {
-    public static List<String> titlesList = new ArrayList<String>() {{
+
+    /**
+     * mutable list containing common scientific titles.
+     */
+    public static List<String> titlesList = new ArrayList<>() {{
         add("Dr\\.\\s*rer\\.\\s*nat\\.");
         add("Dr\\.\\s*h\\.\\s*c\\.\\s*mult\\.");
         add("Dr\\.\\s*habil\\.");

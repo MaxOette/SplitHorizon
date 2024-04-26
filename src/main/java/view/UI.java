@@ -23,19 +23,33 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The UI class defines the GUI which contains all visible elements.
+ */
 public class UI extends Application {
 
+    /**
+     * Contact object for storing the individual name parts.
+     */
     private Contact contact = new Contact();
 
+    /**
+     * ContactSplitter object for splitting the input string into its individual parts.
+     */
     private final ContactSplitter contactSplitter = new ContactSplitterImpl();
 
+    /**
+     * MessageGenerator object for generating the formal letter salutation.
+     */
     private final MessageGenerator messageGenerator = new MessageGeneratorImpl();
 
-
+    /**
+     * Builds the UI and shows it to the user.
+     * @param primaryStage - stage for visualizing the UI.
+     */
     @Override
     public void start(Stage primaryStage) {
         GridPane outerGrid = new GridPane();
