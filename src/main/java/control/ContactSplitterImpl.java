@@ -5,10 +5,7 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,12 +46,20 @@ public class ContactSplitterImpl implements ContactSplitter {
 
         nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
         matcher = nobiliaryPattern.matcher(input);
-        int nobilityIdx = 0;
         if (matcher.find()) {
             contact.setNobleTitle(matcher.group());
             String subString = input.substring(matcher.start(), matcher.end()).trim();
-            input = input.replace(subString, "");
-            nobilityIdx = matcher.start();
+
+            if (input.contains(",")) {
+                input = input.replace(subString, "");
+            } else {
+                String[] nameParts = input.split(subString);
+                input = nameParts[1].trim();
+                if (!nameParts[0].trim().isEmpty()) {
+                    input = input + "," + nameParts[0].trim();
+                }
+            }
+
         }
 
         input = input.trim();
@@ -73,7 +78,6 @@ public class ContactSplitterImpl implements ContactSplitter {
             if (firstNames.length > 1) {
                 contact.setSecondName(firstNames[1]);
             }
-
         } else {
             String[] nameParts = input.split("\\s+");
             if (nameParts.length == 1) {
@@ -85,12 +89,12 @@ public class ContactSplitterImpl implements ContactSplitter {
             }
             if (nameParts.length == 3) {
                 contact.setFirstName(nameParts[0]);
-               // if (nobilityIdx == nameParts[0].trim().length() + 2) {
-               //     contact.setLastName(nameParts[1] + "-" + nameParts[2]);
-               // } else {
-                    contact.setSecondName(nameParts[1]);
-                    contact.setLastName(nameParts[2]);
-               // }
+                // if (nobilityIdx == nameParts[0].trim().length() + 2) {
+                //     contact.setLastName(nameParts[1] + "-" + nameParts[2]);
+                // } else {
+                contact.setSecondName(nameParts[1]);
+                contact.setLastName(nameParts[2]);
+                // }
 
             }
             if (nameParts.length > 3) {
