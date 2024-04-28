@@ -23,6 +23,7 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -131,25 +132,25 @@ public class UI extends Application {
             String input = inputField.getText();
             contact = contactSplitter.parseContactString(input);
 
-            salutationField.setText(contact.getSalutation());
+            salutationField.setText(contact.getSalutation().trim());
             genderComboBox.setValue(contact.getGender());
-            title1Field.setText(contact.getTitle1());
-            title2Field.setText(contact.getTitle2());
-            firstNameField.setText(contact.getFirstName());
-            secondNameField.setText(contact.getSecondName());
-            nobleTitleField.setText(contact.getNobleTitle());
-            lastNameField.setText(contact.getLastName());
+            title1Field.setText(contact.getTitle1().trim());
+            title2Field.setText(contact.getTitle2().trim());
+            firstNameField.setText(contact.getFirstName().trim());
+            secondNameField.setText(contact.getSecondName().trim());
+            nobleTitleField.setText(contact.getNobleTitle().trim());
+            lastNameField.setText(contact.getLastName().trim());
         });
 
         generateButton.setOnAction(event -> {
-            contact.setSalutation(salutationField.getText());
+            contact.setSalutation(salutationField.getText().trim());
             contact.setGender(genderComboBox.getValue());
-            contact.setTitle1(title1Field.getText());
-            contact.setTitle2(title2Field.getText());
-            contact.setFirstName(firstNameField.getText());
-            contact.setSecondName(secondNameField.getText());
-            contact.setNobleTitle(nobleTitleField.getText());
-            contact.setLastName(lastNameField.getText());
+            contact.setTitle1(title1Field.getText().trim());
+            contact.setTitle2(title2Field.getText().trim());
+            contact.setFirstName(firstNameField.getText().trim());
+            contact.setSecondName(secondNameField.getText().trim());
+            contact.setNobleTitle(nobleTitleField.getText().trim());
+            contact.setLastName(String.join("-",lastNameField.getText().trim().split(" ")));
 
             resultText.setText(messageGenerator.generateMessage(contact));
         });
