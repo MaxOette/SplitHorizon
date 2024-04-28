@@ -69,8 +69,7 @@ public class ContactSplitterImpl implements ContactSplitter {
 
                 if (i == 0) contact.setTitle1(title);
                 if (i == 1) contact.setTitle2(title);
-                String subString = input.substring(matcher.start(), matcher.end()).trim();
-                input = input.replace(subString, "");
+                input = matcher.replaceFirst(" ");
             }
         }
 

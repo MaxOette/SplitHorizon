@@ -24,6 +24,7 @@ class ContactSplitterTest {
                 Arguments.of("Herr Mustermann, Max", "Herr", Gender.M, "", "", "Max", "", "", "Mustermann"),
                 Arguments.of("Herr Dr. Max Mustermann", "Herr", Gender.M, "Dr.", "", "Max", "", "", "Mustermann"),
                 Arguments.of("Herr Dr. Mustermann", "Herr", Gender.M, "Dr.", "", "", "", "", "Mustermann"),
+                Arguments.of("Herr Dr. Dr. Mustermann", "Herr", Gender.M, "Dr.", "Dr.", "", "", "", "Mustermann"),
                 Arguments.of("Herr Prof. Dr. rer. nat. Mustermann", "Herr", Gender.M, "Prof.", "Dr. rer. nat.", "", "", "", "Mustermann"),
                 Arguments.of("Herr Prof. Dr. rer. nat. Max Mustermann", "Herr", Gender.M, "Prof.", "Dr. rer. nat.", "Max", "", "", "Mustermann"),
                 Arguments.of("Herr Prof. Dr. rer. nat. Max Mustermann-Musterfrau", "Herr", Gender.M, "Prof.", "Dr. rer. nat.", "Max", "", "", "Mustermann-Musterfrau"),
