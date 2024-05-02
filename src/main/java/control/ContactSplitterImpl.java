@@ -33,11 +33,21 @@ public class ContactSplitterImpl implements ContactSplitter {
     private Pattern salutationPattern;
 
     /**
-     * Constructor - called by initialization of the class.
-     * Sets default values to class variables.
+     * Constructor initializes patterns for recognizing salutations, titles, and noble titles.
      */
     public ContactSplitterImpl() {
+        initPatterns();
+    }
+
+    private void initPatterns() {
         salutationPattern = Pattern.compile("Herr|Frau|Hr\\.|Fr\\.");
+        titlePattern = compilePatternFromList(Titles.titlesList);
+        nobiliaryPattern = compilePatternFromList(NobleTitles.titlesList);
+    }
+
+    private Pattern compilePatternFromList(java.util.List<String> titlesList) {
+        titlesList.sort(Collections.reverseOrder());
+        return Pattern.compile(String.join("|", titlesList));
     }
 
     /**
@@ -49,90 +59,147 @@ public class ContactSplitterImpl implements ContactSplitter {
     @Override
     public Contact parseContactString(String input) {
         Contact contact = new Contact();
-        Matcher matcher;
+        input = parseSalutation(input, contact);
+        input = parseTitles(input, contact);
+        input = parseNobleTitles(input, contact);
+        parseName(input, contact);
 
-        matcher = salutationPattern.matcher(input);
+        return contact;
+    }
+
+    /**
+     * Parses the salutation from the input string and sets the corresponding gender in the contact.
+     *
+     * @param input The input string containing the name.
+     * @param contact The Contact object to populate.
+     * @return The remaining part of the input string after removing the salutation.
+     */
+    String parseSalutation(String input, Contact contact) {
+        Matcher matcher = salutationPattern.matcher(input);
         if (matcher.find()) {
-            contact.setSalutation(matcher.group());
-            contact.setGender(("Herr".equals(matcher.group()) || "Hr.".equals(matcher.group())) ? Gender.M : Gender.F);
-            input = input.substring(matcher.end()).trim();
+            String salutation = matcher.group();
+            contact.setSalutation(salutation);
+            contact.setGender(determineGender(salutation));
+            String subString = input.substring(matcher.start(), matcher.end()).trim();
+            input = input.replace(subString, "");
         }
+        return input.trim().replaceAll("\\s+", " ");
+    }
 
-        Titles.titlesList.sort(Collections.reverseOrder());
-        titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
+    private Gender determineGender(String salutation) {
+        return "Herr".equals(salutation) || "Hr.".equals(salutation) ? Gender.M : Gender.F;
+    }
+
+    /**
+     * Parses academic or professional titles from the input string.
+     *
+     * @param input The input string containing the name and titles.
+     * @param contact The Contact object to populate.
+     * @return The remaining part of the input string after extracting titles.
+     */
+    String parseTitles(String input, Contact contact) {
+        Matcher matcher;
         for (int i = 0; i < 2; i++) {
             matcher = titlePattern.matcher(input);
-
             if (matcher.find()) {
-                String[] titleParts = matcher.group().split(" ");
-                String title = Arrays.stream(titleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
-
+                String title = extractTitle(matcher.group().split(" "));
                 if (i == 0) contact.setTitle1(title);
                 if (i == 1) contact.setTitle2(title);
                 input = matcher.replaceFirst(" ");
             }
         }
+        return input.trim().replaceAll("\\s+", " ");
+    }
 
-        NobleTitles.titlesList.sort(Collections.reverseOrder());
-        nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
-        matcher = nobiliaryPattern.matcher(input);
+    private String extractTitle(String[] titleParts) {
+        return Arrays.stream(titleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
+
+    }
+
+    /**
+     * Parses noble titles from the input string.
+     *
+     * @param input The input string containing the name and noble titles.
+     * @param contact The Contact object to populate.
+     * @return The remaining part of the input string after extracting noble titles.
+     */
+    String parseNobleTitles(String input, Contact contact) {
+        Matcher matcher = nobiliaryPattern.matcher(input);
         if (matcher.find()) {
-            String[] nobleTitleParts = matcher.group().split(" ");
-            String nobleTitle = Arrays.stream(nobleTitleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
+            String nobleTitle = extractTitle(matcher.group().split(" "));
             contact.setNobleTitle(nobleTitle);
             String subString = input.substring(matcher.start(), matcher.end()).trim();
 
-            if (input.contains(",")) {
-                input = input.replace(subString, "");
-            } else {
-                String[] nameParts = input.split(subString);
-                input = nameParts[1].trim();
-                if (!nameParts[0].trim().isEmpty()) {
-                    input = input + "," + nameParts[0].trim();
-                }
-            }
-
+            input = adjustInputPostNobleTitle(input, subString);
         }
+        return input;
+    }
 
+    private String adjustInputPostNobleTitle(String input, String inputPostNobleTitle) {
+        if (input.contains(",")) {
+            input = input.replace(inputPostNobleTitle, "");
+            input = input.replaceAll("\\s*,\\s*",",");
+        } else {
+            String[] nameParts = input.split(inputPostNobleTitle);
+            input = nameParts[1].trim();
+            if (!nameParts[0].trim().isEmpty()) {
+                input = input + "," + nameParts[0].trim();
+            }
+        }
+        return input.trim().replaceAll("\\s+", " ");
+    }
+
+    /**
+     * Parses the input string to extract first name, second name, and last name, updating the Contact object.
+     *
+     * @param input The string from which the name parts are to be extracted.
+     * @param contact The Contact object to populate.
+     */
+    void parseName(String input, Contact contact) {
         input = input.trim();
         if (input.contains(",")) {
-            String[] nameParts = input.split(",");
-            String[] lastNames = nameParts[0].trim().split("\\s+");
-            if (lastNames.length == 1) {
-                contact.setLastName(lastNames[0]);
-            } else {
-                contact.setLastName(String.join("-", Arrays.copyOfRange(nameParts[0].split("\\s+"), 0, nameParts.length)));
-            }
-
-            String[] firstNames = nameParts[1].trim().split("\\s+");
-
-            contact.setFirstName(firstNames[0]);
-            if (firstNames.length > 1) {
-                contact.setSecondName(firstNames[1]);
-            }
+            parseCommaSeparatedName(input, contact);
         } else {
-            String[] nameParts = input.split("\\s+");
-            if (nameParts.length == 1) {
-                contact.setLastName(nameParts[0]);
-            }
-            if (nameParts.length == 2) {
-                contact.setFirstName(nameParts[0]);
-                contact.setLastName(nameParts[nameParts.length - 1]);
-            }
-            if (nameParts.length == 3) {
-                contact.setFirstName(nameParts[0]);
-                contact.setSecondName(nameParts[1]);
-                contact.setLastName(nameParts[2]);
+            parseUnseparatedName(input, contact);
+        }
+    }
 
-            }
-            if (nameParts.length > 3) {
-                contact.setFirstName(nameParts[0]);
-                contact.setSecondName(nameParts[1]);
-                contact.setLastName(String.join("-", Arrays.copyOfRange(nameParts, 2, nameParts.length)));
-            }
-
+    private void parseCommaSeparatedName(String input, Contact contact) {
+        String[] nameParts = input.split(",");
+        String[] lastNames = nameParts[0].trim().split("\\s+");
+        if (lastNames.length == 1) {
+            contact.setLastName(lastNames[0]);
+        } else {
+            contact.setLastName(String.join("-", Arrays.copyOfRange(nameParts[0].split("\\s+"), 0, nameParts.length)));
         }
 
-        return contact;
+        String[] firstNames = nameParts[1].trim().split("\\s+");
+
+        contact.setFirstName(firstNames[0]);
+        if (firstNames.length > 1) {
+            contact.setSecondName(firstNames[1]);
+        }
+    }
+
+    private void parseUnseparatedName(String input, Contact contact) {
+        String[] nameParts = input.split("\\s+");
+        if (nameParts.length == 1) {
+            contact.setLastName(nameParts[0]);
+        }
+        if (nameParts.length == 2) {
+            contact.setFirstName(nameParts[0]);
+            contact.setLastName(nameParts[nameParts.length - 1]);
+        }
+        if (nameParts.length == 3) {
+            contact.setFirstName(nameParts[0]);
+            contact.setSecondName(nameParts[1]);
+            contact.setLastName(nameParts[2]);
+
+        }
+        if (nameParts.length > 3) {
+            contact.setFirstName(nameParts[0]);
+            contact.setSecondName(nameParts[1]);
+            contact.setLastName(String.join("-", Arrays.copyOfRange(nameParts, 2, nameParts.length)));
+        }
     }
 }

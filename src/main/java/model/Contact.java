@@ -54,6 +54,17 @@ public class Contact {
 
     }
 
+    public Contact(String salutation, Gender gender, String title1, String title2, String firstName, String secondName, String nobleTitle, String lastName) {
+        this.salutation = salutation;
+        this.gender = gender;
+        this.title2 = title2;
+        this.title1 = title1;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.nobleTitle = nobleTitle;
+        this.lastName = lastName;
+    }
+
     /**
      * Returns the salutation.
      * @return the salutation

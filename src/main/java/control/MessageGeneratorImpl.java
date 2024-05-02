@@ -16,34 +16,33 @@ public class MessageGeneratorImpl implements MessageGenerator {
      */
     @Override
     public String generateMessage(Contact contact) {
-        String message = "";
-        if(contact.getGender() == Gender.M) {
-            message = "Sehr geehrter Herr " +
-                    contact.getTitle1() + " " +
-                    contact.getTitle2() + " " +
-                    contact.getFirstName() +  " " +
-                    contact.getSecondName() + " " +
-                    contact.getNobleTitle() + " " +
-                    contact.getLastName();
+        StringBuilder sb = new StringBuilder();
+
+        if (contact.getGender() == Gender.M) {
+            sb.append("Sehr geehrter Herr ");
         } else if (contact.getGender() == Gender.F) {
-            message = "Sehr geehrte Frau " +
-                    contact.getTitle1() + " " +
-                    contact.getTitle2() + " " +
-                    contact.getFirstName() +  " " +
-                    contact.getSecondName() + " " +
-                    contact.getNobleTitle() + " " +
-                    contact.getLastName();
+            sb.append("Sehr geehrte Frau ");
         } else {
-            message = "Hallo " +
-                    contact.getTitle1() + " " +
-                    contact.getTitle2() + " " +
-                    contact.getFirstName() +  " " +
-                    contact.getSecondName() + " " +
-                    contact.getNobleTitle() + " " +
-                    contact.getLastName();
+            sb.append("Hallo ");
         }
-        return message.trim().replaceAll("\\s+", " ");
+
+        appendIfPresent(sb, contact.getTitle1());
+        appendIfPresent(sb, contact.getTitle2());
+        appendIfPresent(sb, contact.getFirstName());
+        appendIfPresent(sb, contact.getSecondName());
+        appendIfPresent(sb, contact.getNobleTitle());
+        appendIfPresent(sb, contact.getLastName());
+
+        return sb.toString().trim().replaceAll("\\s+", " ");
     }
 
-
+    /**
+     * Appends the provided value to the StringBuilder if it is not null or empty.
+     * Adds a space after the value for proper spacing in the final string.
+     */
+    private void appendIfPresent(StringBuilder sb, String value) {
+        if (value != null && !value.isEmpty()) {
+            sb.append(value).append(" ");
+        }
+    }
 }

@@ -23,7 +23,6 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,8 +46,16 @@ public class UI extends Application {
      */
     private final MessageGenerator messageGenerator = new MessageGeneratorImpl();
 
+    private TextField inputField;
+    private TextField salutationField;
+    private ComboBox<Gender> genderComboBox;
+    private TextField title1Field, title2Field;
+    private TextField firstNameField, secondNameField, nobleTitleField, lastNameField;
+    private Label resultText;
+
     /**
      * Builds the UI and shows it to the user.
+     *
      * @param primaryStage - stage for visualizing the UI.
      */
     @Override
@@ -73,7 +80,7 @@ public class UI extends Application {
         outerGrid.add(inputLabel, 0, 0);
         outerGrid.add(editLabel, 1, 0);
 
-        TextField inputField = new TextField();
+        inputField = new TextField();
         Button parseButton = new Button("Parsen");
         Button generateButton = new Button("Anrede generieren");
         Button doneButton = new Button("Speichern");
@@ -81,16 +88,16 @@ public class UI extends Application {
         leftInnerGrid.add(buttonsBox, 0, 1);
         leftInnerGrid.add(inputField, 0, 0);
 
-        TextField salutationField = new TextField();
-        ComboBox<Gender> genderComboBox = new ComboBox<>();
+        salutationField = new TextField();
+        genderComboBox = new ComboBox<>();
         genderComboBox.getItems().setAll(Gender.values());
         genderComboBox.setValue(Gender.X);
-        TextField title1Field = new TextField();
-        TextField title2Field = new TextField();
-        TextField firstNameField = new TextField();
-        TextField secondNameField = new TextField();
-        TextField nobleTitleField = new TextField();
-        TextField lastNameField = new TextField();
+        title1Field = new TextField();
+        title2Field = new TextField();
+        firstNameField = new TextField();
+        secondNameField = new TextField();
+        nobleTitleField = new TextField();
+        lastNameField = new TextField();
 
         rightInnerGrid.add(new Label("Anrede:"), 0, 0);
         rightInnerGrid.add(salutationField, 1, 0);
@@ -119,7 +126,7 @@ public class UI extends Application {
 
         Label resultLabel = new Label("Ergebnis-Anrede:");
         resultLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
-        Label resultText = new Label("");
+        resultText = new Label("");
 
         VBox vbox = new VBox(outerGrid, resultLabel, resultText);
         vbox.setPadding(new Insets(25, 25, 25, 25));
@@ -128,66 +135,80 @@ public class UI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        parseButton.setOnAction(event ->{
-            String input = inputField.getText();
-            contact = contactSplitter.parseContactString(input);
+        parseButton.setOnAction(event -> parseInput());
 
-            salutationField.setText(contact.getSalutation().trim());
-            genderComboBox.setValue(contact.getGender());
-            title1Field.setText(contact.getTitle1().trim());
-            title2Field.setText(contact.getTitle2().trim());
-            firstNameField.setText(contact.getFirstName().trim());
-            secondNameField.setText(contact.getSecondName().trim());
-            nobleTitleField.setText(contact.getNobleTitle().trim());
-            lastNameField.setText(contact.getLastName().trim());
-        });
+        generateButton.setOnAction(event -> generateMessage());
 
-        generateButton.setOnAction(event -> {
-            contact.setSalutation(salutationField.getText().trim());
-            contact.setGender(genderComboBox.getValue());
-            contact.setTitle1(title1Field.getText().trim());
-            contact.setTitle2(title2Field.getText().trim());
-            contact.setFirstName(firstNameField.getText().trim());
-            contact.setSecondName(secondNameField.getText().trim());
-            contact.setNobleTitle(nobleTitleField.getText().trim());
-            contact.setLastName(String.join("-",lastNameField.getText().trim().split(" ")));
-
-            resultText.setText(messageGenerator.generateMessage(contact));
-        });
-
-        doneButton.setOnAction(event -> {
-
-            Pattern titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
-            Pattern nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
-
-            Matcher matcher = titlePattern.matcher(title1Field.getText());
-            if (!matcher.matches() && !title1Field.getText().trim().isEmpty()) {
-                Titles.titlesList.add(title1Field.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
-                System.out.println("Added the following to Titles: " + title1Field.getText());
-            }
-            matcher = titlePattern.matcher(title2Field.getText());
-            if (!matcher.matches() && !title2Field.getText().trim().isEmpty()) {
-                Titles.titlesList.add(title2Field.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
-                System.out.println("Added the following to Titles: " + title2Field.getText());
-            }
-            matcher = nobiliaryPattern.matcher(nobleTitleField.getText());
-            if (!matcher.matches() && !nobleTitleField.getText().trim().isEmpty()) {
-                NobleTitles.titlesList.add(nobleTitleField.getText().replaceAll(" ", "\\\\"+ "s*").replaceAll("\\.", "\\\\"+ "."));
-                System.out.println("Added the following to noble Titles: " + nobleTitleField.getText());
-            }
-
-            contact = new Contact();
-            inputField.setText("");
-            salutationField.setText("");
-            genderComboBox.setValue(Gender.X);
-            title1Field.setText("");
-            title2Field.setText("");
-            firstNameField.setText("");
-            secondNameField.setText("");
-            nobleTitleField.setText("");
-            lastNameField.setText("");
-            resultText.setText("");
-        });
+        doneButton.setOnAction(event -> clearFormAndPersistTitles());
     }
 
+    private void parseInput() {
+        contact = contactSplitter.parseContactString(inputField.getText());
+        updateFieldsBasedOnContact();
+    }
+
+    private void generateMessage() {
+        updateContactFromFields();
+        String message = messageGenerator.generateMessage(contact);
+        resultText.setText(message);
+    }
+
+    private void clearFormAndPersistTitles() {
+        persistTitles();
+        resetForm();
+    }
+
+    private void updateFieldsBasedOnContact() {
+        salutationField.setText(contact.getSalutation());
+        genderComboBox.setValue(contact.getGender());
+        title1Field.setText(contact.getTitle1());
+        title2Field.setText(contact.getTitle2());
+        firstNameField.setText(contact.getFirstName());
+        secondNameField.setText(contact.getSecondName());
+        nobleTitleField.setText(contact.getNobleTitle());
+        lastNameField.setText(contact.getLastName());
+    }
+
+    private void updateContactFromFields() {
+        contact.setSalutation(salutationField.getText());
+        contact.setGender(genderComboBox.getValue());
+        contact.setTitle1(title1Field.getText());
+        contact.setTitle2(title2Field.getText());
+        contact.setFirstName(firstNameField.getText());
+        contact.setSecondName(secondNameField.getText());
+        contact.setNobleTitle(nobleTitleField.getText());
+        contact.setLastName(lastNameField.getText());
+    }
+
+    private void resetForm() {
+        contact = new Contact();
+        inputField.setText("");
+        salutationField.setText("");
+        genderComboBox.setValue(Gender.X);
+        title1Field.setText("");
+        title2Field.setText("");
+        firstNameField.setText("");
+        secondNameField.setText("");
+        nobleTitleField.setText("");
+        lastNameField.setText("");
+        resultText.setText("");
+    }
+
+    private void persistTitles() {
+        Pattern titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
+        Pattern nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
+
+        Matcher matcher = titlePattern.matcher(title1Field.getText());
+        if (!matcher.matches() && !title1Field.getText().trim().isEmpty()) {
+            Titles.titlesList.add(title1Field.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
+        }
+        matcher = titlePattern.matcher(title2Field.getText());
+        if (!matcher.matches() && !title2Field.getText().trim().isEmpty()) {
+            Titles.titlesList.add(title2Field.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
+        }
+        matcher = nobiliaryPattern.matcher(nobleTitleField.getText());
+        if (!matcher.matches() && !nobleTitleField.getText().trim().isEmpty()) {
+            NobleTitles.titlesList.add(nobleTitleField.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
+        }
+    }
 }
