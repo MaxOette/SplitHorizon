@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NobleTitlesTest {
 
-
+    /**
+     * Add titles before each test.
+     */
     @BeforeEach
     void setUp() {
         NobleTitles.titlesList.clear();
@@ -16,6 +18,9 @@ public class NobleTitlesTest {
         NobleTitles.titlesList.add("zu");
     }
 
+    /**
+     * Add title and check that it was added correctly.
+     */
     @Test
     void testAddTitleNotPresent() {
         NobleTitles.addTitle("Baron von");
@@ -23,16 +28,22 @@ public class NobleTitlesTest {
         assertEquals(3, NobleTitles.titlesList.size());
     }
 
+    /**
+     * Add already existing title and check that it was not added.
+     */
     @Test
     void testAddTitleAlreadyPresent() {
         NobleTitles.addTitle("von");
-        assertEquals(2, NobleTitles.titlesList.size());  // No duplicate should be added
+        assertEquals(2, NobleTitles.titlesList.size());
     }
 
+    /**
+     * Add empty title and check that it was not added.
+     */
     @Test
     void testAddEmptyTitle() {
         NobleTitles.addTitle("");
-        assertEquals(2, NobleTitles.titlesList.size());  // No empty title should be added
+        assertEquals(2, NobleTitles.titlesList.size());
     }
 
 }

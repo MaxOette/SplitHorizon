@@ -7,6 +7,7 @@ import model.Titles;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,24 +31,28 @@ public class ContactSplitterImpl implements ContactSplitter {
     /**
      * Regex-pattern containing the usual german salutation strings.
      */
-    private Pattern salutationPattern;
+    private final Pattern salutationPattern;
 
     /**
-     * Constructor initializes patterns for recognizing salutations, titles, and noble titles.
+     * Constructor initializes patterns for recognizing salutations.
      */
     public ContactSplitterImpl() {
+        salutationPattern = Pattern.compile("Herr|Frau|Hr\\.|Fr\\.");
         initPatterns();
     }
 
+    /**
+     * Method initializes patterns for recognizing titles, and noble titles.
+     */
     private void initPatterns() {
-        salutationPattern = Pattern.compile("Herr|Frau|Hr\\.|Fr\\.");
         titlePattern = compilePatternFromList(Titles.titlesList);
         nobiliaryPattern = compilePatternFromList(NobleTitles.titlesList);
     }
 
     private Pattern compilePatternFromList(java.util.List<String> titlesList) {
         titlesList.sort(Collections.reverseOrder());
-        return Pattern.compile(String.join("|", titlesList));
+        List<String> annotatedTitlesList = titlesList.stream().map(x->"\\" + "s+" + x + "\\" + "s+").toList();
+        return Pattern.compile(String.join("|", annotatedTitlesList));
     }
 
     /**
@@ -58,6 +63,7 @@ public class ContactSplitterImpl implements ContactSplitter {
      */
     @Override
     public Contact parseContactString(String input) {
+        initPatterns();
         Contact contact = new Contact();
         input = parseSalutation(input, contact);
         input = parseTitles(input, contact);
@@ -70,7 +76,7 @@ public class ContactSplitterImpl implements ContactSplitter {
     /**
      * Parses the salutation from the input string and sets the corresponding gender in the contact.
      *
-     * @param input The input string containing the name.
+     * @param input   The input string containing the name.
      * @param contact The Contact object to populate.
      * @return The remaining part of the input string after removing the salutation.
      */
@@ -93,13 +99,14 @@ public class ContactSplitterImpl implements ContactSplitter {
     /**
      * Parses academic or professional titles from the input string.
      *
-     * @param input The input string containing the name and titles.
+     * @param input   The input string containing the name and titles.
      * @param contact The Contact object to populate.
      * @return The remaining part of the input string after extracting titles.
      */
     String parseTitles(String input, Contact contact) {
         Matcher matcher;
         for (int i = 0; i < 2; i++) {
+            input = " " + input + " ";
             matcher = titlePattern.matcher(input);
             if (matcher.find()) {
                 String title = extractTitle(matcher.group().split(" "));
@@ -119,11 +126,12 @@ public class ContactSplitterImpl implements ContactSplitter {
     /**
      * Parses noble titles from the input string.
      *
-     * @param input The input string containing the name and noble titles.
+     * @param input   The input string containing the name and noble titles.
      * @param contact The Contact object to populate.
      * @return The remaining part of the input string after extracting noble titles.
      */
     String parseNobleTitles(String input, Contact contact) {
+        input = " " + input + " ";
         Matcher matcher = nobiliaryPattern.matcher(input);
         if (matcher.find()) {
             String nobleTitle = extractTitle(matcher.group().split(" "));
@@ -138,7 +146,7 @@ public class ContactSplitterImpl implements ContactSplitter {
     private String adjustInputPostNobleTitle(String input, String inputPostNobleTitle) {
         if (input.contains(",")) {
             input = input.replace(inputPostNobleTitle, "");
-            input = input.replaceAll("\\s*,\\s*",",");
+            input = input.replaceAll("\\s*,\\s*", ",");
         } else {
             String[] nameParts = input.split(inputPostNobleTitle);
             input = nameParts[1].trim();
@@ -152,7 +160,7 @@ public class ContactSplitterImpl implements ContactSplitter {
     /**
      * Parses the input string to extract first name, second name, and last name, updating the Contact object.
      *
-     * @param input The string from which the name parts are to be extracted.
+     * @param input   The string from which the name parts are to be extracted.
      * @param contact The Contact object to populate.
      */
     void parseName(String input, Contact contact) {

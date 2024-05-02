@@ -2,10 +2,15 @@ package control;
 
 import model.Contact;
 import model.Gender;
+import model.NobleTitles;
+import model.Titles;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class ContactSplitterTest {
 
+    /**
+     * Reset titles for test and sort titles list for longest fitting match while parsing
+     */
+    @BeforeEach
+    void setUp() {
+        Titles.resetTitlesList();
+        NobleTitles.resetTitlesList();
+        Titles.titlesList.sort(Collections.reverseOrder());
+        NobleTitles.titlesList.sort(Collections.reverseOrder());
+    }
 
     /**
      * Provides test cases for testing the parseSalutation method.

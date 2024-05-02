@@ -13,18 +13,7 @@ public class Titles {
     /**
      * mutable list containing common scientific titles.
      */
-    public static List<String> titlesList = new ArrayList<>() {{
-        add("Dr\\.\\s*rer\\.\\s*nat\\.");
-        add("Dr\\.\\s*h\\.\\s*c\\.\\s*mult\\.");
-        add("Dr\\.\\s*habil\\.");
-        add("Dr\\.\\s*med\\.");
-        add("Dr\\.\\s*phil\\.");
-        add("Dr\\.");
-        add("Professor");
-        add("Prof\\.");
-        add("Dr\\.\\s*-\\s*Ing\\.");
-        add("Dipl\\.\\s*Ing\\.");
-    }};
+    public static List<String> titlesList = initialTitlesList();
 
     /**
      * Adds a title to list if not present
@@ -38,5 +27,27 @@ public class Titles {
         if (!matcher.matches() && !title.trim().isEmpty()) {
             titlesList.add(title.replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
         }
+    }
+
+    private static List<String> initialTitlesList() {
+        return new ArrayList<>() {{
+            add("Dr\\.\\s*rer\\.\\s*nat\\.");
+            add("Dr\\.\\s*h\\.\\s*c\\.\\s*mult\\.");
+            add("Dr\\.\\s*habil\\.");
+            add("Dr\\.\\s*med\\.");
+            add("Dr\\.\\s*phil\\.");
+            add("Dr\\.");
+            add("Professor");
+            add("Prof\\.");
+            add("Dr\\.\\s*-\\s*Ing\\.");
+            add("Dipl\\.\\s*Ing\\.");
+        }};
+    }
+
+    /**
+     * Resets the titlelist to the initial values
+     */
+    public static void resetTitlesList() {
+        titlesList = initialTitlesList();
     }
 }
