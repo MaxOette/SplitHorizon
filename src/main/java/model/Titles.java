@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The class Titles defines a mutable list of common scientific titles.
@@ -23,4 +25,18 @@ public class Titles {
         add("Dr\\.\\s*-\\s*Ing\\.");
         add("Dipl\\.\\s*Ing\\.");
     }};
+
+    /**
+     * Adds a title to list if not present
+     *
+     * @param title The title that should be added
+     */
+    public static void addTitle (String title) {
+        Pattern titlePattern = Pattern.compile(String.join("|", titlesList));
+
+        Matcher matcher = titlePattern.matcher(title);
+        if (!matcher.matches() && !title.trim().isEmpty()) {
+            titlesList.add(title.replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
+        }
+    }
 }

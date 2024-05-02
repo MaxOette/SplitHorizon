@@ -195,20 +195,8 @@ public class UI extends Application {
     }
 
     private void persistTitles() {
-        Pattern titlePattern = Pattern.compile(String.join("|", Titles.titlesList));
-        Pattern nobiliaryPattern = Pattern.compile(String.join("|", NobleTitles.titlesList));
-
-        Matcher matcher = titlePattern.matcher(title1Field.getText());
-        if (!matcher.matches() && !title1Field.getText().trim().isEmpty()) {
-            Titles.titlesList.add(title1Field.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
-        }
-        matcher = titlePattern.matcher(title2Field.getText());
-        if (!matcher.matches() && !title2Field.getText().trim().isEmpty()) {
-            Titles.titlesList.add(title2Field.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
-        }
-        matcher = nobiliaryPattern.matcher(nobleTitleField.getText());
-        if (!matcher.matches() && !nobleTitleField.getText().trim().isEmpty()) {
-            NobleTitles.titlesList.add(nobleTitleField.getText().replaceAll(" ", "\\\\" + "s*").replaceAll("\\.", "\\\\" + "."));
-        }
+        Titles.addTitle(title1Field.getText());
+        Titles.addTitle(title2Field.getText());
+        NobleTitles.addTitle(nobleTitleField.getText());
     }
 }
