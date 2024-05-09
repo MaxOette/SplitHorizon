@@ -40,7 +40,7 @@ public class Contact {
     /**
      * The title of nobility of the contact.
      */
-    private String nobleTitle ="";
+    private String nobleTitle = "";
 
     /**
      * The last name of the contact.
@@ -54,6 +54,18 @@ public class Contact {
 
     }
 
+    /**
+     * Constructor - responsible for instantiation of a Contact object with all attributes.
+     *
+     * @param salutation The salutation of the contact.
+     * @param gender The gender of the contact.
+     * @param title1 The first scientific title of the contact.
+     * @param title2 The second scientific title of the contact.
+     * @param firstName The first name of the contact.
+     * @param secondName The second name of the contact.
+     * @param nobleTitle The title of nobility of the contact.
+     * @param lastName The last name of the contact.
+     */
     public Contact(String salutation, Gender gender, String title1, String title2, String firstName, String secondName, String nobleTitle, String lastName) {
         this.salutation = salutation;
         this.gender = gender;
@@ -67,6 +79,7 @@ public class Contact {
 
     /**
      * Returns the salutation.
+     *
      * @return the salutation
      */
     public String getSalutation() {
@@ -75,6 +88,7 @@ public class Contact {
 
     /**
      * Sets the salutation.
+     *
      * @param salutation - the new salutation
      */
     public void setSalutation(String salutation) {
@@ -83,6 +97,7 @@ public class Contact {
 
     /**
      * Returns the gender.
+     *
      * @return the gender
      */
     public Gender getGender() {
@@ -91,6 +106,7 @@ public class Contact {
 
     /**
      * Sets the gender.
+     *
      * @param gender - the new gender
      */
     public void setGender(Gender gender) {
@@ -99,6 +115,7 @@ public class Contact {
 
     /**
      * Returns the first title.
+     *
      * @return the first title
      */
     public String getTitle1() {
@@ -107,6 +124,7 @@ public class Contact {
 
     /**
      * Sets the first title.
+     *
      * @param title1 - the new first title
      */
     public void setTitle1(String title1) {
@@ -115,6 +133,7 @@ public class Contact {
 
     /**
      * Returns the second title.
+     *
      * @return the second title
      */
     public String getTitle2() {
@@ -123,6 +142,7 @@ public class Contact {
 
     /**
      * Sets the second title.
+     *
      * @param title2 - the new second title
      */
     public void setTitle2(String title2) {
@@ -131,6 +151,7 @@ public class Contact {
 
     /**
      * Returns the first name.
+     *
      * @return the first name
      */
     public String getFirstName() {
@@ -139,6 +160,7 @@ public class Contact {
 
     /**
      * Sets the first name.
+     *
      * @param firstName - the new first name
      */
     public void setFirstName(String firstName) {
@@ -147,6 +169,7 @@ public class Contact {
 
     /**
      * Returns the second name.
+     *
      * @return the second name
      */
     public String getSecondName() {
@@ -155,6 +178,7 @@ public class Contact {
 
     /**
      * Sets the second name.
+     *
      * @param secondName - the new second name
      */
     public void setSecondName(String secondName) {
@@ -163,6 +187,7 @@ public class Contact {
 
     /**
      * Returns the last name.
+     *
      * @return the last name
      */
     public String getLastName() {
@@ -171,6 +196,7 @@ public class Contact {
 
     /**
      * Sets the last name.
+     *
      * @param lastName - the new last name
      */
     public void setLastName(String lastName) {
@@ -179,6 +205,7 @@ public class Contact {
 
     /**
      * Returns the noble title.
+     *
      * @return the noble title
      */
     public String getNobleTitle() {
@@ -187,6 +214,7 @@ public class Contact {
 
     /**
      * Sets the noble title.
+     *
      * @param nobleTitle - the new noble title
      */
     public void setNobleTitle(String nobleTitle) {

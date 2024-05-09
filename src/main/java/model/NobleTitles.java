@@ -29,11 +29,25 @@ public class NobleTitles {
         }
     }
 
+    /**
+     * initial list of nobility-titles.
+     */
     private static List<String> initialTitlesList() {
         return new ArrayList<>() {{
             add("Baron\\s*von");
+            add("Baronin\\s*von");
             add("Freiherr\\s*von");
+            add("Freiherrin\\s*von");
             add("Freiherr\\s*vom");
+            add("Freiherrin\\s*vom");
+            add("Fürst\\s*von");
+            add("Fürstin\\s*von");
+            add("Fürst\\s*zu");
+            add("Fürstin\\s*zu");
+            add("Prinz\\s*von");
+            add("Prinzessin\\s*von");
+            add("Prinz\\s*zu");
+            add("Prinzessin\\s*zu");
             add("von\\s*und\\s*zu");
             add("von");
             add("zu");

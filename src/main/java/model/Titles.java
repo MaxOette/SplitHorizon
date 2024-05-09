@@ -29,6 +29,9 @@ public class Titles {
         }
     }
 
+    /**
+     * initial list containing common scientific titles.
+     */
     private static List<String> initialTitlesList() {
         return new ArrayList<>() {{
             add("Dr\\.\\s*rer\\.\\s*nat\\.");
@@ -37,6 +40,7 @@ public class Titles {
             add("Dr\\.\\s*med\\.");
             add("Dr\\.\\s*phil\\.");
             add("Dr\\.");
+            add("Professorin");
             add("Professor");
             add("Prof\\.");
             add("Dr\\.\\s*-\\s*Ing\\.");

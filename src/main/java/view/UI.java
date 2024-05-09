@@ -23,9 +23,6 @@ import model.Gender;
 import model.NobleTitles;
 import model.Titles;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * The UI class defines the GUI which contains all visible elements.
  */
@@ -142,22 +139,34 @@ public class UI extends Application {
         doneButton.setOnAction(event -> clearFormAndPersistTitles());
     }
 
+    /**
+     * API call to control package of the application to parse the input string.
+     */
     private void parseInput() {
         contact = contactSplitter.parseContactString(inputField.getText());
         updateFieldsBasedOnContact();
     }
 
+    /**
+     * API call to control package of the application to generate message.
+     */
     private void generateMessage() {
         updateContactFromFields();
         String message = messageGenerator.generateMessage(contact);
         resultText.setText(message);
     }
 
+    /**
+     * clear form and possible call to persist titles.
+     */
     private void clearFormAndPersistTitles() {
         persistTitles();
         resetForm();
     }
 
+    /**
+     * Update form fields from contact object.
+     */
     private void updateFieldsBasedOnContact() {
         salutationField.setText(contact.getSalutation());
         genderComboBox.setValue(contact.getGender());
@@ -169,6 +178,9 @@ public class UI extends Application {
         lastNameField.setText(contact.getLastName());
     }
 
+    /**
+     * Update contact object from form fields.
+     */
     private void updateContactFromFields() {
         contact.setSalutation(salutationField.getText());
         contact.setGender(genderComboBox.getValue());
@@ -180,6 +192,9 @@ public class UI extends Application {
         contact.setLastName(lastNameField.getText());
     }
 
+    /**
+     * reset form.
+     */
     private void resetForm() {
         contact = new Contact();
         inputField.setText("");
@@ -194,6 +209,9 @@ public class UI extends Application {
         resultText.setText("");
     }
 
+    /**
+     * Adds new titles to the list of titles.
+     */
     private void persistTitles() {
         Titles.addTitle(title1Field.getText());
         Titles.addTitle(title2Field.getText());

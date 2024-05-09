@@ -49,6 +49,9 @@ public class ContactSplitterImpl implements ContactSplitter {
         nobiliaryPattern = compilePatternFromList(NobleTitles.titlesList);
     }
 
+    /**
+     * Method compiles patterns from list to Matcher Pattern.
+     */
     private Pattern compilePatternFromList(java.util.List<String> titlesList) {
         titlesList.sort(Collections.reverseOrder());
         List<String> annotatedTitlesList = titlesList.stream().map(x->"\\" + "s+" + x + "\\" + "s+").toList();
@@ -92,6 +95,9 @@ public class ContactSplitterImpl implements ContactSplitter {
         return input.trim().replaceAll("\\s+", " ");
     }
 
+    /**
+     * Method determines gender of input.
+     */
     private Gender determineGender(String salutation) {
         return "Herr".equals(salutation) || "Hr.".equals(salutation) ? Gender.M : Gender.F;
     }
@@ -143,6 +149,13 @@ public class ContactSplitterImpl implements ContactSplitter {
         return input;
     }
 
+    /**
+     * Adjust input for next parsing step.
+     *
+     * @param input   The input string containing the name and noble titles.
+     * @param inputPostNobleTitle The rest of the input string containing the name.
+     * @return The adjusted input string after extracting the noble title.
+     */
     private String adjustInputPostNobleTitle(String input, String inputPostNobleTitle) {
         if (input.contains(",")) {
             input = input.replace(inputPostNobleTitle, "");
@@ -172,6 +185,12 @@ public class ContactSplitterImpl implements ContactSplitter {
         }
     }
 
+    /**
+     * Parses the name when separated with a comma.
+     *
+     * @param input   The string from which the name parts are to be extracted.
+     * @param contact The Contact object to populate.
+     */
     private void parseCommaSeparatedName(String input, Contact contact) {
         String[] nameParts = input.split(",");
         String[] lastNames = nameParts[0].trim().split("\\s+");
@@ -189,6 +208,12 @@ public class ContactSplitterImpl implements ContactSplitter {
         }
     }
 
+    /**
+     * Parses the name when not separated with a comma.
+     *
+     * @param input   The string from which the name parts are to be extracted.
+     * @param contact The Contact object to populate.
+     */
     private void parseUnseparatedName(String input, Contact contact) {
         String[] nameParts = input.split("\\s+");
         if (nameParts.length == 1) {
