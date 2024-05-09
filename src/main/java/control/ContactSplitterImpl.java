@@ -124,6 +124,11 @@ public class ContactSplitterImpl implements ContactSplitter {
         return input.trim().replaceAll("\\s+", " ");
     }
 
+    /**
+     * Extracts the title from titleParts Array to filter empty fields
+     *
+     * @param titleParts with empty fields
+     */
     private String extractTitle(String[] titleParts) {
         return Arrays.stream(titleParts).filter(x -> !x.isEmpty()).map(String::trim).collect(Collectors.joining(" "));
 
@@ -197,7 +202,7 @@ public class ContactSplitterImpl implements ContactSplitter {
         if (lastNames.length == 1) {
             contact.setLastName(lastNames[0]);
         } else {
-            contact.setLastName(String.join("-", Arrays.copyOfRange(nameParts[0].split("\\s+"), 0, nameParts.length)));
+            contact.setLastName(String.join("-", Arrays.copyOfRange(lastNames, 0, lastNames.length)));
         }
 
         String[] firstNames = nameParts[1].trim().split("\\s+");
