@@ -18,7 +18,8 @@ Es stehen zwei Optionen zur Verfügung:
 2.	Start über die Konsole
     -	Öffnen einer Konsole im Ordner der .jar-Datei
     -	Start der Anwendung durch den Befehl
-  	``$ java -jar SplitHorizon.jar``
+
+  	    ``$ java -jar SplitHorizon.jar``
 
 ### Benutzung der Anwendung
 Die Verwendung der Anwendung kann dem folgenden Screenshot entnommen werden:
